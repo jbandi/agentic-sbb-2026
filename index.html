@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>T3 Code</title>
+  </head>
+  <body>
+    <div id="app">
+      <aside id="sidebar">
+        <div class="sidebar-header">
+          <span class="brand"><span class="brand-mark">▲</span> T3 Code</span>
+        </div>
+        <div class="sidebar-label">Konversationen</div>
+        <nav id="conversation-list"></nav>
+        <div class="sidebar-footer">
+          <span class="model-badge">t3-agent-preview</span>
+        </div>
+      </aside>
+      <main id="main">
+        <header id="topbar">
+          <button id="sidebar-toggle" title="Sidebar ein-/ausblenden" aria-label="Sidebar umschalten">☰</button>
+          <span id="conversation-title"></span>
+          <button id="theme-toggle" title="Dark/Light Mode wechseln" aria-label="Farbschema umschalten">☀</button>
+        </header>
+        <div id="chat"></div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
