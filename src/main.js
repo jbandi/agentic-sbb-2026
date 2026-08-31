@@ -65,12 +65,7 @@ function renderMessage(msg) {
   el.className = `message ${msg.role}`;
 
   if (msg.role === "tool") {
-    const [command, ...rest] = msg.content.split("\n");
-    el.innerHTML = `
-      <details open>
-        <summary><span class="tool-dot">⏺</span><code>${escapeHtml(command)}</code></summary>
-        <pre class="tool-output">${escapeHtml(rest.join("\n").trim())}</pre>
-      </details>`;
+    el.appendChild(renderToolCall(msg));
     return el;
   }
 
@@ -82,9 +77,87 @@ function renderMessage(msg) {
     const label = document.createElement("div");
     label.className = "agent-label";
     label.innerHTML = `<span class="brand-mark">▲</span> Agent`;
+    if (msg.duration) {
+      const duration = document.createElement("span");
+      duration.className = "agent-duration";
+      duration.textContent = ` (Dauer: ${msg.duration})`;
+      label.appendChild(duration);
+    }
     el.appendChild(label);
   }
   el.appendChild(body);
+  return el;
+}
+
+function renderToolCall(msg) {
+  const [command, ...rest] = msg.content.split("\n");
+  const details = document.createElement("details");
+  details.className = "tool-call";
+  details.innerHTML = `
+    <summary><span class="tool-dot">⏺</span><code>${escapeHtml(command)}</code></summary>
+    <pre class="tool-output">${escapeHtml(rest.join("\n").trim())}</pre>`;
+  return details;
+}
+
+function renderProgressUpdate(msg) {
+  const el = document.createElement("div");
+  el.className = "progress-update";
+  el.innerHTML = `<span class="progress-mark">▲</span>`;
+
+  const body = document.createElement("div");
+  body.className = "bubble progress-body";
+  body.innerHTML = marked.parse(msg.content);
+  body.querySelectorAll("pre code").forEach((block) => hljs.highlightElement(block));
+  el.appendChild(body);
+  return el;
+}
+
+function parseDurationInSeconds(value) {
+  const match = value?.trim().match(/^(?:(\d+)\s*min\s*)?(?:(\d+)\s*s)?$/i);
+  if (!match || (match[1] === undefined && match[2] === undefined)) return undefined;
+  return Number(match[1] ?? 0) * 60 + Number(match[2] ?? 0);
+}
+
+function formatDuration(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  if (!minutes) return `${remainingSeconds} s`;
+  if (!remainingSeconds) return `${minutes} min`;
+  return `${minutes} min ${remainingSeconds} s`;
+}
+
+function getWorkDuration(messages, fallbackDuration) {
+  const durations = messages
+    .filter((msg) => msg.role === "progress" && msg.duration)
+    .map((msg) => msg.duration);
+  const seconds = durations.map(parseDurationInSeconds);
+  if (seconds.length && seconds.every((value) => value !== undefined)) {
+    return formatDuration(seconds.reduce((total, value) => total + value, 0));
+  }
+  return fallbackDuration ?? durations.at(-1) ?? "a while";
+}
+
+function renderWorkGroup(messages, fallbackDuration) {
+  const el = document.createElement("div");
+  el.className = "message work-group";
+
+  const details = document.createElement("details");
+  details.className = "work-group-details";
+
+  const summary = document.createElement("summary");
+  summary.textContent = `Worked for ${getWorkDuration(messages, fallbackDuration)}`;
+  details.appendChild(summary);
+
+  const content = document.createElement("div");
+  content.className = "work-group-content";
+  for (const msg of messages) {
+    content.appendChild(
+      msg.role === "tool" ? renderToolCall(msg) : renderProgressUpdate(msg)
+    );
+  }
+  details.appendChild(content);
+
+  el.appendChild(details);
   return el;
 }
 
@@ -98,7 +171,36 @@ function renderConversation(slug) {
   renderList(conv.slug);
   titleEl.textContent = conv.title;
   chatEl.innerHTML = "";
-  for (const msg of conv.messages) chatEl.appendChild(renderMessage(msg));
+  for (let index = 0; index < conv.messages.length;) {
+    const msg = conv.messages[index];
+    const isWorkMessage = (message) => ["tool", "progress"].includes(message?.role);
+    if (!isWorkMessage(msg)) {
+      chatEl.appendChild(renderMessage(msg));
+      index += 1;
+      continue;
+    }
+
+    let groupEnd = index + 1;
+    while (isWorkMessage(conv.messages[groupEnd])) groupEnd += 1;
+    const workMessages = conv.messages.slice(index, groupEnd);
+    const toolCount = workMessages.filter((message) => message.role === "tool").length;
+    const hasProgress = workMessages.some((message) => message.role === "progress");
+
+    if (hasProgress || toolCount > 1) {
+      const nextAgentDuration = conv.messages[groupEnd]?.role === "agent"
+        ? conv.messages[groupEnd].duration
+        : undefined;
+      const previousAgentDuration = conv.messages[index - 1]?.role === "agent"
+        ? conv.messages[index - 1].duration
+        : undefined;
+      chatEl.appendChild(
+        renderWorkGroup(workMessages, nextAgentDuration ?? previousAgentDuration)
+      );
+    } else {
+      chatEl.appendChild(renderMessage(msg));
+    }
+    index = groupEnd;
+  }
   chatEl.scrollTop = 0;
 }
 

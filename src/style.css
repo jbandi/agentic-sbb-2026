@@ -207,6 +207,11 @@ html, body {
   margin-bottom: 6px;
 }
 
+.agent-duration {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
 .message.agent .bubble > :first-child { margin-top: 0; }
 .message.agent .bubble > :last-child { margin-bottom: 0; }
 
@@ -263,7 +268,7 @@ html, body {
 }
 
 /* Tool calls: terminal-style block */
-.message.tool details {
+.tool-call {
   background: var(--tool-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -272,7 +277,11 @@ html, body {
   overflow: hidden;
 }
 
-.message.tool summary {
+.tool-call > summary,
+.work-group-details > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
   padding: 8px 14px;
   color: var(--text-dim);
@@ -280,14 +289,66 @@ html, body {
   user-select: none;
 }
 
-.message.tool summary::-webkit-details-marker { display: none; }
+.tool-call > summary::-webkit-details-marker,
+.work-group-details > summary::-webkit-details-marker { display: none; }
 
-.message.tool summary code {
+.tool-call > summary::after,
+.work-group-details > summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  margin-left: auto;
+  flex-shrink: 0;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.tool-call[open] > summary::after,
+.work-group-details[open] > summary::after { transform: rotate(45deg); }
+
+.tool-call > summary code {
   color: var(--text);
-  margin-left: 8px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tool-dot { color: var(--accent); }
+
+.work-group-details > summary {
+  padding: 6px 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.work-group-content {
+  display: grid;
+  gap: 8px;
+  margin-top: 6px;
+  padding-left: 14px;
+  border-left: 1px solid var(--border);
+}
+
+.progress-update {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 8px;
+  padding: 2px 4px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.progress-mark {
+  padding-top: 4px;
+  color: var(--accent);
+  font-size: 9px;
+}
+
+.progress-body > :first-child { margin-top: 0; }
+.progress-body > :last-child { margin-bottom: 0; }
 
 .tool-output {
   margin: 0;

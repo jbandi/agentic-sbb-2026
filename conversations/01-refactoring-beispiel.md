@@ -3,7 +3,7 @@
 ===USER===
 In unserem Projekt gibt es in `booking.service.ts` und `reservation.service.ts` fast identischen Code zur Validierung von Reisedaten. Kannst du das aufräumen?
 
-===AGENT===
+===AGENT duration="8 s"===
 Ich schaue mir beide Services an, um die Gemeinsamkeiten zu identifizieren.
 
 ===TOOL===
@@ -13,7 +13,7 @@ src/services/booking.service.ts:58:  private validatePassengerCount(count: numbe
 src/services/reservation.service.ts:31:  private validateTravelDate(date: Date): void {
 src/services/reservation.service.ts:47:  private validatePassengerCount(count: number): void {
 
-===AGENT===
+===AGENT duration="42 s"===
 Beide Services enthalten identische Implementierungen von `validateTravelDate` und `validatePassengerCount`. Ich extrahiere die Logik in ein gemeinsames Modul `travel-validation.ts`:
 
 ```typescript
@@ -49,7 +49,7 @@ $ npm test
 Test Suites: 3 passed, 3 total
 Tests:       31 passed, 31 total
 
-===AGENT===
+===AGENT duration="6 s"===
 Das Refactoring ist abgeschlossen und alle 31 Tests laufen durch. Zusammenfassung der Änderungen:
 
 | Datei | Änderung |
@@ -63,7 +63,7 @@ Dabei ist mir aufgefallen, dass die 90-Tage-Grenze an drei weiteren Stellen als 
 ===USER===
 Ja, gerne — und schreib noch einen Test für den Grenzfall genau 90 Tage.
 
-===AGENT===
+===AGENT duration="24 s"===
 Erledigt. Ich habe die Konstante `MAX_BOOKING_ADVANCE_DAYS = 90` in `travel-validation.ts` eingeführt und an allen vier Stellen verwendet. Der neue Grenzfall-Test:
 
 ```typescript

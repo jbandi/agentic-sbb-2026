@@ -7,14 +7,17 @@
 //   ===USER===
 //   text of the user message
 //
-//   ===AGENT===
+//   ===AGENT duration="12 s"===
 //   markdown answer of the agent
+//
+//   ===PROGRESS duration="8 s"===
+//   intermediate progress update
 //
 //   ===TOOL===
 //   $ command on the first line
 //   output on the following lines
 //
-const MARKER = /^===(USER|AGENT|TOOL)===\s*$/;
+const MARKER = /^===(USER|AGENT|PROGRESS|TOOL)(?:\s+duration="([^"]+)")?===\s*$/;
 
 export function parseConversation(raw, fallbackTitle) {
   const lines = raw.split(/\r?\n/);
@@ -26,7 +29,11 @@ export function parseConversation(raw, fallbackTitle) {
     const match = line.match(MARKER);
     if (match) {
       if (current) messages.push(finish(current));
-      current = { role: match[1].toLowerCase(), lines: [] };
+      current = {
+        role: match[1].toLowerCase(),
+        duration: ["AGENT", "PROGRESS"].includes(match[1]) ? match[2] : undefined,
+        lines: [],
+      };
       continue;
     }
     if (!current) {
@@ -42,5 +49,9 @@ export function parseConversation(raw, fallbackTitle) {
 }
 
 function finish(section) {
-  return { role: section.role, content: section.lines.join("\n").trim() };
+  return {
+    role: section.role,
+    content: section.lines.join("\n").trim(),
+    ...(section.duration ? { duration: section.duration } : {}),
+  };
 }

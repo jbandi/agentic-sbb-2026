@@ -28,9 +28,12 @@ Markdown mit Rollen-Markern, jeweils auf einer eigenen Zeile:
 ===USER===
 Die Frage des Users. Markdown wird unterstützt.
 
-===AGENT===
+===AGENT duration="12 s"===
 Die Antwort des Agenten — volles Markdown inkl. Code-Blöcken,
 Tabellen und Listen, mit Syntax-Highlighting.
+
+===PROGRESS duration="8 s"===
+Eine Zwischenmeldung während der Arbeit.
 
 ===TOOL===
 $ npm test
@@ -40,8 +43,14 @@ Wird als aufklappbarer Terminal-Block dargestellt.
 
 - Die erste `# Überschrift` vor dem ersten Marker wird als Titel verwendet
   (sonst der Dateiname).
-- `===TOOL===`-Blöcke sind optional und lassen die Konversation wie eine echte
-  Agenten-Session mit Tool-Aufrufen aussehen.
+- Agent-Marker können optional eine Dauer enthalten, zum Beispiel
+  `===AGENT duration="2 min 14 s"===`. Sie erscheint im UI als
+  `Agent (Dauer: 2 min 14 s)`.
+- `===PROGRESS duration="8 s"===` kennzeichnet eine Zwischenmeldung. Eine
+  zusammenhängende Folge aus Fortschritts- und Tool-Blöcken erscheint unter
+  einem standardmäßig geschlossenen `Worked for …`-Block. Seine Dauer ist die
+  Summe der Fortschrittsdauern.
+- Einzelne `===TOOL===`-Blöcke bleiben eigene aufklappbare Terminal-Blöcke.
 
 ### Export aus einem echten Agenten
 
