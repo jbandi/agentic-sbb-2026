@@ -43,6 +43,13 @@ Wird als aufklappbarer Terminal-Block dargestellt.
 - `===TOOL===`-Blöcke sind optional und lassen die Konversation wie eine echte
   Agenten-Session mit Tool-Aufrufen aussehen.
 
+### Export aus einem echten Agenten
+
+Die Datei [`EXPORT-SPEC.md`](./EXPORT-SPEC.md) ist als Prompt formuliert:
+Einfach am Ende einer Session in Claude Code / Claude Desktop / ChatGPT
+einfügen („Exportiere diese Konversation gemäss folgender Spezifikation: …"),
+und der Agent liefert die fertige `.md`-Datei für `conversations/`.
+
 ### Aus Claude / ChatGPT übernehmen
 
 Antworten aus Claude Desktop oder ChatGPT lassen sich direkt als Markdown
