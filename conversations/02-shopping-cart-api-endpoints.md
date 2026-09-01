@@ -51,7 +51,7 @@ D:\sources\webshop-frontend\webshop-frontend\app\features\catalog\article.server
   `/hub/bgh/articledetails/orderendtimes?...`
   `/hub/bgh/articledetails/recentOrderInfo/${mainArticleId}`
 
-===AGENT===
+===PROGRESS===
 Der erste Durchlauf zeigt den Kern unter `/hub/bgh/cart` plus separate Order-Anzeige/Export-Endpunkte unter `/hub/bgh/customerorders`. Ich schaue jetzt in die konkreten Servermodule und die aufrufenden Routes/State-Machine, damit die Liste nicht nur URLs, sondern Zweck, Methode und Parameter enthält.
 
 ===TOOL===
@@ -182,6 +182,9 @@ IAddCustomerOrderCommandParamsData:
   externalArticle: boolean
   articleIsEan: boolean
 
+===PROGRESS===
+Die State-Machine-Aufrufe und DTOs sind abgeglichen. Ich fasse jetzt Zweck, Szenario sowie Input- und Output-Schemas pro Endpoint zusammen.
+
 ===AGENT===
 Ja. Hier ist die Cart-Gruppe aus `cartApi.server.ts` mit Zweck, Szenario und Schemas. Die Basis ist überall `${SERVER_CONFIG.BACKEND_URL}`.
 
@@ -267,7 +270,7 @@ $ atlassian.getConfluencePage pageId=4931715080
   "body": "<p></p>"
 }
 
-===AGENT===
+===PROGRESS===
 Die Seite ist aktuell praktisch leer (`<p></p>`), also lege ich die Zusammenfassung als neuen strukturierten Abschnitt mit Tabellen und gemeinsamen Schemas an.
 
 ===TOOL===

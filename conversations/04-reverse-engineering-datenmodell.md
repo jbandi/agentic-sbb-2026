@@ -13,7 +13,7 @@ Vorgehen:
 
 Das Backend (`hq-portal-backend`) ist Legacy-Fallback und interessiert nicht. Schreib das Ergebnis nach `docs/db-datenmodell.md`.
 
-===AGENT duration="3 min 24 s"===
+===AGENT===
 Ich sammle zuerst alle Queries ein.
 
 ===TOOL===
@@ -33,7 +33,7 @@ app/features/sustainability-report/revenue-per-label.sql
 app/shell/select_customer.sql
 ... (26 Dateien insgesamt)
 
-===AGENT===
+===PROGRESS duration="3 min 24 s"===
 Ich habe alle 26 Queries gelesen. Ein Muster zieht sich durch praktisch jeden Report — das ist der Schlüssel zum ganzen Modell:
 
 Fast alle Auswertungen vereinigen zwei getrennte Verkaufskanäle per `UNION ALL`:
@@ -71,6 +71,9 @@ Verifiziere jetzt jede Tabelle und jede Spalte gegen zwei unabhängige Quellen:
 
 Halte am Ende der Doku fest, was wie verifiziert wurde, und markiere explizit die Fälle, wo das Portal Spalten nutzt, die Hibernate gar nicht kennt.
 
+===AGENT===
+Ich gleiche zuerst alle Tabellen und Spalten mit den Hibernate-Mappings ab. Nicht gemappte Objekte prüfe ich anschließend lesend im Oracle-Katalog.
+
 ===TOOL===
 $ grep -rl "T_CHECKOUTPOS\|T_CUSTOMER\|T_ARTICLE" prolixpro/server/ProdegaJpa --include=*.hbm.xml
 prolixpro/server/ProdegaJpa/src/main/resources/.../Customer.hbm.xml
@@ -79,7 +82,7 @@ prolixpro/server/ProdegaJpa/src/main/resources/.../CheckoutPos.hbm.xml
 prolixpro/server/ProdegaJpa/src/main/resources/.../Article.hbm.xml
 ... 31 Mappings gefunden
 
-===AGENT duration="2 min 51 s"===
+===PROGRESS duration="2 min 51 s"===
 Der Grossteil deckt sich exakt: Kunde, Firma, Adresse, Person, User, Parameter, PLZ, Artikel, MainArticle, alle `*TEXT`-Tabellen, HWG, AGR, Gastro, Einheiten, Checkout(Pos), CustomerOrder(Pos), Invoice, AghRecap, Shipment, Fact, Pikt — Tabellen- und Spaltennamen stimmen 1:1.
 
 Vier Objekte finde ich in keinem Mapping. Die prüfe ich direkt im DB-Katalog:
@@ -118,7 +121,10 @@ Erstelle ein Mermaid-ER-Diagramm der Kernbeziehungen (`docs/db-datenmodell-er.mm
 
 Danach: Leg den Inhalt als Confluence-Seite "Kundenportal Datenmodell" im Space ENTWICKLUNG an, unter der Seite "HQ Applikationen/Webshop & Portal/Dokumentation". Zeig mir vorher die Gliederung.
 
-===AGENT duration="2 min 08 s"===
+===AGENT===
+Ich erstelle das ER-Diagramm aus den verifizierten Kernbeziehungen und rendere beide Bildformate. Danach zeige ich die Gliederung vor dem Confluence-Schritt.
+
+===PROGRESS duration="2 min 08 s"===
 Das ER-Diagramm dreht sich um drei Achsen — Kunde → Transaktion → Artikel — plus die Beleg- und Dokumentketten:
 
 ```mermaid
@@ -159,12 +165,18 @@ Die Links auf die `.sql`-Dateien setze ich auf Bitbucket (dev-Branch), damit sie
 ===USER===
 ja
 
+===AGENT===
+Ich lege die Seite jetzt unter dem bestätigten Confluence-Pfad an und binde das gerenderte ER-Diagramm ein.
+
 ===TOOL===
 $ confluence create-page --space ENTWICKLUNG --parent "HQ Applikationen/Webshop & Portal/Dokumentation" --title "Kundenportal Datenmodell"
 Created: 4956160011
 https://prodega.atlassian.net/wiki/spaces/ENTWICKLUNG/pages/4956160011/Kundenportal+Datenmodell
 
-===AGENT duration="24 s"===
+===PROGRESS duration="24 s"===
+Die Confluence-Seite wurde erstellt. Ich prüfe jetzt den Zielpfad und den eingebetteten Inhalt.
+
+===AGENT===
 Angelegt: **Kundenportal Datenmodell** unter *HQ Applikationen/Webshop & Portal/Dokumentation* im Space ENTWICKLUNG.
 
 Das ER-Diagramm ist als PNG eingebettet, die `.mmd`-Quelle liegt im Repo — bei Änderungen also dort nachführen und neu rendern, sonst laufen Bild und Doku auseinander.

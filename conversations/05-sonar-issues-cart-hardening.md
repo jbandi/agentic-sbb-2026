@@ -6,7 +6,7 @@ Hole die aktuellen Sonar Issues und mach einen Vorschlag, welche man als nächst
 ===AGENT===
 Ich nutze den SonarCloud-Issues-Workflow, um die offenen Findings des aktuellen Projekts abzurufen und sie anschließend nach Nutzen, Risiko und Aufwand zu priorisieren.
 
-===AGENT===
+===PROGRESS===
 Der Projekt-Key ist eindeutig im Jenkinsfile hinterlegt: `transgourmet_webshop-frontend`. Ich rufe jetzt alle offenen Issues des Hauptbranches ab und speichere zusätzlich die Rohdaten lokal für eine belastbare Priorisierung.
 
 ===TOOL===
@@ -29,7 +29,7 @@ Raw JSON: D:\sources\webshop-frontend\.sonar-open-issues.tmp.json
 MAJOR | webshop-frontend/app/shell/middleware/globalStorageMiddleware.ts:187 | Make sure that using this pseudorandom number generator is safe here.
 CRITICAL | webshop-frontend/app/shell/routes/resources/VersionInfoRoute.tsx:26 | Make sure this weak hash algorithm is not used in a sensitive context here.
 
-===AGENT===
+===PROGRESS===
 Die Sonar-Pfade enthalten noch das Repository-Unterverzeichnis `webshop-frontend`; ich gleiche die Findings gerade mit dem tatsächlichen Code ab. Entscheidend ist dabei, ob die beiden Security-Meldungen echte Risiken oder kontextabhängige False Positives sind.
 
 ===AGENT===
@@ -65,10 +65,10 @@ Kannst du die TODO Kommentare analysieren. Welche könntest du direkt implementi
 ===AGENT===
 Ich nutze erneut den SonarCloud-Issues-Workflow, diesmal gezielt für Regel S1135. Danach prüfe ich jeden TODO im Code und ordne ihn in „direkt implementierbar“, „braucht fachliche Entscheidung“ oder „nur aufräumen“ ein.
 
-===AGENT===
+===PROGRESS===
 Die 17 Findings konzentrieren sich stark: 12 davon sind jeweils zwei Kommentare in sechs Cart-Resource-Routen. Ich prüfe jetzt, ob dahinter fehlende Funktionen stehen oder nur kopierte Migrationshinweise.
 
-===AGENT===
+===PROGRESS===
 Die meisten TODOs sind älter als die heutige Fehlerbehandlung. Besonders die sechs „error handling on caller side“-Hinweise sind nachweislich erledigt: Serverfehler werden in strukturierte Responses übersetzt, `ky` wandelt sie in `WebshopApiErrorException` um, und die Cart-State-Machine behandelt Login- und generische Fehler separat.
 
 ===AGENT===
@@ -111,6 +111,9 @@ Gut. Bitte die zwei PRs erstellen. Verwende jeweils einen Branch mit dem Prefix 
 ===AGENT===
 Ich setze die beiden zuvor vorgeschlagenen Pakete als separate Bitbucket-PRs um. Dafür nutze ich zuerst den Commit/PR-Workflow und anschließend die Bitbucket-Integration; die Branches erhalten eindeutige Namen unter dem Prefix `WEB-3935-sonar-issues`.
 
+===PROGRESS===
+Ich habe den Arbeitsbaum und die Zielbranches geprüft. Vor der Umsetzung brauche ich die Bestätigung der beiden Branch-Namen.
+
 ===AGENT===
 Aktuell ist noch nichts gestaged. Bitte bestätige diese exakten Branch-Namen:
 
@@ -125,22 +128,22 @@ Die namen passen
 ===AGENT===
 Die Branch-Namen sind bestätigt. Ich beginne mit dem Cleanup-PR, verifiziere ihn, committe und pushe ihn; danach setze ich den Cart-Hardening-PR auf einer sauberen `develop`-Basis um.
 
-===AGENT===
+===PROGRESS===
 Der Cleanup-Branch ist angelegt. Ich habe die wirkungslosen React-Router-Platzhalter entfernt, die beiden `celumId`-Fälle anhand ihrer tatsächlichen API-Typen geklärt und den Virtuoso-Workaround als bewusstes Verhalten dokumentiert. Jetzt laufen Typprüfung und Lint.
 
-===AGENT===
+===PROGRESS===
 Cleanup-Prüfung ist grün: Typecheck und Lint laufen ohne Fehler. Gestaged sind ausschließlich `env.ts`, `articleMapper.ts` und `ArticleListActions.tsx`; ich committe diese jetzt mit einer kurzen deutschen Nachricht.
 
-===AGENT===
+===PROGRESS===
 Der erste PR ist erstellt. Für den zweiten Branch gehe ich bewusst wieder von `origin/develop` aus, damit beide PRs unabhängig und ohne versteckte Commit-Abhängigkeit reviewbar bleiben. Die Cart-spezifischen TODOs samt Validierungsfehler landen vollständig im Hardening-PR.
 
-===AGENT===
+===PROGRESS===
 Der Hardening-Branch validiert jetzt alle sechs betroffenen JSON-Payloads mit Zod, liefert strukturierte `400`-Antworten, lehnt nicht authentisierte geschützte Resource-Actions früh mit `401` ab und behebt den fehlerhaften `positionId`-Check. Ich prüfe nun Schema-Tests, TypeScript und Lint gemeinsam.
 
-===AGENT===
+===PROGRESS===
 Der Hardening-Stand ist vollständig grün: 17 Testdateien mit 132 Tests, Typecheck und Lint bestehen. Die Änderungen sind auf Cart-Validierung, den geschützten Resource-Action-Check und zugehörige Tests begrenzt; ich stage jetzt genau diese Dateien.
 
-===AGENT===
+===PROGRESS===
 Der erste PR wurde bereits nach `develop` gemergt. Ich committe den geprüften Hardening-Stand jetzt und rebasiere ihn anschließend auf diesen neuesten `develop`-Stand, sodass der zweite PR ohne Rückstand oder Überschneidung startet.
 
 ===AGENT===
@@ -193,10 +196,10 @@ The test doesn't catch this because it validates a fabricated payload (class: 'R
 ===AGENT===
 Das Review ist berechtigt und beschreibt einen echten Produktionsbruch. Ich prüfe die konkreten Java-Subklassen und passe PR #627 so an, dass `/positionCommands` nur stabile Envelope-Invarianten validiert und den polymorphen Backend-Payload unverändert weiterleitet. Für das Aktualisieren des bestehenden PRs nutze ich wieder den Bitbucket-Commit/PR-Workflow.
 
-===AGENT===
+===PROGRESS===
 Die Java-Definition bestätigt das Review: `class` enthält den vollqualifizierten Typnamen, und die Basisklasse erlaubt tatsächlich `null` bei mehreren Feldern. Ich baue jetzt einen Regressionstest ein, der zusätzliche Subklassenfelder und nullable Basisfelder ausdrücklich abdeckt.
 
-===AGENT===
+===PROGRESS===
 Der gezielte Regressionstest, Typecheck und Lint sind grün. Die Anpassung erhält die unbekannten Subklassenfelder im geparsten Ergebnis unverändert; ich lasse jetzt noch die vollständige Testsuite laufen, bevor ich den bestehenden PR aktualisiere.
 
 ===TOOL===
@@ -213,7 +216,7 @@ remote:
 To bitbucket.org:transgourmet/webshop-frontend.git
    fde8801034..4b9a9318f2  HEAD -> WEB-3935-sonar-issues-cart-hardening
 
-===AGENT===
+===PROGRESS===
 Der Fix ist committed und auf den Branch von PR #627 gepusht. Ich prüfe noch kurz, ob Bitbucket den neuen Commit im offenen PR als Source-Commit anzeigt.
 
 ===AGENT===
@@ -246,6 +249,9 @@ The other five schemas are correct against the actual client payloads — I veri
 ===AGENT===
 Ich analysiere das Feedback gegen den aktuellen Codepfad und die bestehenden Auth-/Error-Handler. Dabei trenne ich den echten UX-Bug von den eher strukturellen Hinweisen und prüfe, welche Änderung PR #627 sinnvoll noch aufnehmen sollte.
 
+===PROGRESS===
+Die betroffenen Auth- und Error-Pfade sind abgeglichen. Der neue Guard erzeugt einen zusätzlichen 401-Pfad, der das bestehende Login-Mapping umgeht.
+
 ===AGENT===
 Ja. Mein Fazit: Der 401-Punkt ist valide und sollte vor dem Merge behoben werden. Nur die Bezeichnung „Toast“ ist möglicherweise ungenau – im Warenkorb landet der Text überwiegend im generischen Fehlerdialog.
 
@@ -272,6 +278,12 @@ Die Schemas würde ich von `routes/resources` nach etwa `features/cart/cartValid
 
 ===USER===
 Die Problematik um 401 verstehe ich noch nicht ganz ... wurde vor dem Change kein 401 zurückgeliefert?
+
+===AGENT===
+Ich vergleiche den bisherigen und den neuen 401-Pfad Schritt für Schritt. Entscheidend ist nicht der Statuscode, sondern seine Verarbeitung im Login-Flow.
+
+===PROGRESS===
+Der Vergleich bestätigt zwei verschiedene Pfade: Der bestehende Backend-401 wird zentral gemappt, der neue Guard-401 umgeht dieses Mapping.
 
 ===AGENT===
 Doch, auch vorher konnten 401-Antworten entstehen. Neu ist nicht der Statuscode an sich, sondern ein zusätzlicher 401-Pfad mit anderem Payload und ohne bestehendes Mapping.
@@ -313,6 +325,9 @@ Und was war der ursprüngliche Grund diesen Change zu machen?
 ===AGENT===
 Ich schaue kurz in den ursprünglichen Commit und die PR-Beschreibung, damit ich den Grund nicht aus dem späteren Review rückwärts ableite. Entscheidend ist, ob der Guard ein konkretes TODO/Sonar-Finding lösen sollte oder Teil einer allgemeinen Absicherung war.
 
+===PROGRESS===
+Der ursprüngliche Commit verweist auf ein Authentifizierungs- und Validierungs-TODO in sechs Cart-Resource-Routen.
+
 ===AGENT===
 Der ursprüngliche Grund war ein explizites TODO in sechs Cart-Resource-Routen:
 
@@ -347,6 +362,12 @@ Sie passt nicht zur bestehenden Login-/Fehlerbehandlung. Die richtige Korrektur 
 
 ===USER===
 Kannst du mir einen Vorschlag für "den neuen 401-Pfad sauber in den bestehenden Login-Flow integrieren" machen. Noch nichts am Code ändern.
+
+===AGENT===
+Ich analysiere den bestehenden Login-Flow und formuliere eine Änderung, die den lokalisierten Dialog erhält. Ich ändere dabei keinen Code.
+
+===PROGRESS===
+Der bestehende `LoginExpired`-Zustand kann weiterverwendet werden. Dafür müssen beide 401-Pfade dieselbe normalisierte Fehlerstruktur liefern.
 
 ===AGENT===
 Mein bevorzugter Vorschlag wäre, den bestehenden Cart-Login-Flow zu erhalten:
@@ -402,6 +423,12 @@ Separat bleibt die Frage der anderen 25 `tgProtectedResourceAction`-Consumer. F�
 
 ===USER===
 Kannst du mir die Punkte 2 und 4 genauer erklären
+
+===AGENT===
+Ich erkläre zuerst die Fehlernormalisierung und danach den Sonderfall der Availability-Child-Machine. Dabei zeige ich jeweils den heutigen und den vorgeschlagenen Ablauf.
+
+===PROGRESS===
+Die Analyse bestätigt zwei Ursachen: Der HTTP-Status geht beim Verpacken verloren, und die Child-Machine meldet 401 derzeit als erfolgreichen Output.
 
 ===AGENT===
 ### Punkt 2: HTTP-Status beim Verpacken des Fehlers erhalten
@@ -569,6 +596,9 @@ Zu Punkt 3: Gäbe es eine Möglichkeit, dass die Child-Machine im Falle eines Lo
 ===AGENT===
 Ich unterscheide dabei zwei Ebenen der Normalisierung: zuerst HTTP → `WebshopApiErrorException`, danach Exception → Cart-State-Machine-Fehler. Für die Child-Machine prüfe ich kurz die im Projekt verwendete XState-Version und die verfügbaren Mechanismen, damit ich keinen veralteten `escalate`-Ansatz vorschlage.
 
+===PROGRESS===
+XState 5.30 erlaubt die Propagation über einen geworfenen normalisierten Fehler. Die vorhandenen Parent-Invocations besitzen bereits passende `onError`-Transitions.
+
 ===AGENT===
 ### Wo findet die Fehlernormalisierung statt?
 
@@ -691,19 +721,19 @@ Dann mach ein red/Green TDD für das neue Verhalten.
 ===AGENT===
 Ich setze das in zwei klaren TDD-Schritten um: zuerst reine Charakterisierungstests für den heutigen Fehlerpfad, die ohne Produktionsänderung grün werden. Danach ergänze ich die neuen 401/403-Erwartungen, bestätige den roten Zustand und ändere erst dann die Implementierung. Für die Aktualisierung des bestehenden PRs nutze ich anschließend wieder den Bitbucket-Commit/PR-Workflow.
 
-===AGENT===
+===PROGRESS===
 Die Charakterisierung ist abgeschlossen und grün: Ein normaler Cart-Actor bewahrt heute Message/Trace/Prolix-Daten, und die Availability-Child-Machine liefert normale technische Fehler weiterhin über `output.error` zurück. Jetzt ergänze ich ausschließlich die neuen Erwartungen für `status` sowie die 401/403-Eskalation zum Parent und führe sie bewusst noch gegen die unveränderte Implementierung aus.
 
-===AGENT===
+===PROGRESS===
 Der Red-Schritt ist bestätigt: Genau drei Erwartungen schlagen aus den erwarteten Gründen fehl – der normalisierte Fehler enthält noch keinen Top-Level-Status, und die Child-Machine endet bei 401/403 noch regulär über `onDone`. Ich ergänze noch einen Test gegen die echte Cart-Parent-Machine, damit nicht nur ein Test-Parent, sondern auch der Übergang nach `LoginExpired` abgesichert ist.
 
-===AGENT===
+===PROGRESS===
 Der Green-Schritt ist erreicht: Alle sechs zuvor roten Erwartungen sind jetzt grün. Normale technische Child-Fehler behalten weiterhin den bisherigen `output.error`-Pfad; ausschließlich 401/403 lassen die Child-Machine fehlschlagen und erreichen dadurch den vorhandenen `onError` der Cart-Parent-Machine. Jetzt prüfe ich Typecheck, Lint und die vollständige Testsuite.
 
-===AGENT===
+===PROGRESS===
 Während der Arbeit wurde der Remote-Branch um einen Merge aus `develop` erweitert. Die drei neuen Remote-Commits betreffen andere Dateien; ich synchronisiere den Worktree jetzt per Rebase mit Autostash und führe danach alle Prüfungen erneut auf dem tatsächlich aktuellen PR-Stand aus.
 
-===AGENT===
+===PROGRESS===
 Die vollständige Prüfung auf dem synchronisierten PR-Stand ist grün: 20 Testdateien mit 153 Tests, Typecheck und Lint. Gestaged sind ausschließlich die Fehlernormalisierung, die beiden State-Machines und ihre neuen Tests; ich aktualisiere nun den bestehenden PR-Branch.
 
 ===TOOL===
@@ -768,7 +798,7 @@ Effort:   671 min (~11 h / ~1.4 working days)
 MAJOR | webshop-frontend/app/shell/middleware/globalStorageMiddleware.ts:187 | Make sure that using this pseudorandom number generator is safe here.
 CRITICAL | webshop-frontend/app/shell/routes/resources/VersionInfoRoute.tsx:26 | Make sure this weak hash algorithm is not used in a sensitive context here.
 
-===AGENT===
+===PROGRESS===
 Der aktuelle Main-Branch hat 55 offene Findings. Darin sind allerdings noch Findings enthalten, die PR #627 erst beim Merge beseitigt; deshalb prüfe ich zusätzlich, ob SonarCloud für den PR-Branch einen eigenen Analysestand kennt, und trenne anschließend „wirklich verbleibend“ von „noch auf Main sichtbar“.
 
 ===TOOL===
@@ -839,6 +869,12 @@ Go.
 ===AGENT===
 Ich behebe jetzt gezielt die beiden S3696-Findings im aktuellen PR: zuerst eine rote Erwartung, dass die normalisierten Cart-Fehler echte `Error`-Instanzen sind, danach die Umstellung auf `CartStateMachineError extends Error` und die vollständige Verifikation. Den bestehenden PR #627 aktualisiere ich anschließend.
 
+===PROGRESS===
+Der TDD-Ablauf und die betroffenen Fehlerpfade sind vorbereitet. Vor der ersten Änderung präzisiert der User die gewünschte Branch- und PR-Struktur.
+
+===AGENT===
+Der Umsetzungspfad für S3696 ist festgelegt. Es wurden noch keine Codeänderungen vorgenommen.
+
 ===USER===
 Go. Erstelle eigene Branches mit eigenem PR für S3696 und dann für den Sammel-PR.
 
@@ -850,10 +886,10 @@ Verstanden: zwei unabhängige Branches und zwei PRs gegen `develop`:
 
 Ich löse zuerst den begonnenen roten Test sauber vom Branch von PR #627, erstelle den S3696-PR vollständig und beginne danach den Sammel-PR auf einem frischen `develop`-Stand.
 
-===AGENT===
+===PROGRESS===
 Der S3696-Red-Schritt ist sauber bestätigt: Beide bisherigen `throw { … }`-Pfade liefern keine `Error`-Instanz. Ich ersetze die beiden Objektliterale jetzt durch einen gemeinsamen `CartStateMachineError`, ohne das fachliche Payload-Format zu verändern.
 
-===AGENT===
+===PROGRESS===
 Der S3696-Fix ist funktional grün; der parallele Gesamt-Testlauf ist allerdings wegen eines Windows-`VirtualAlloc`-Fehlers abgebrochen, während Typecheck und Lint liefen. Ich wiederhole die Tests jetzt alleinstehend, damit wir einen belastbaren fachlichen Teststatus haben.
 
 ===TOOL===
@@ -873,10 +909,10 @@ branch 'WEB-3935-sonar-issues-error-objects' set up to track 'origin/WEB-3935-so
 To bitbucket.org:transgourmet/webshop-frontend.git
  * [new branch]            HEAD -> WEB-3935-sonar-issues-error-objects
 
-===AGENT===
+===PROGRESS===
 Der erste Branch ist fertig und gepusht. S3696 ist testgetrieben behoben: Beide Pfade liefern jetzt einen echten `CartStateMachineError`, während Message, Cause, Trace-ID und Prolix-Identifier unverändert erhalten bleiben. Ich eröffne den separaten PR und gehe danach direkt zum frischen Sammel-Branch.
 
-===AGENT===
+===PROGRESS===
 Der Sammel-Fix kompiliert und lintet ohne Befund; die vorhandenen Date-Util-Regressionstests sind ebenfalls grün. Die acht mechanischen Findings sind ohne API- oder Payload-Änderungen umgesetzt. Ich lasse jetzt die vollständige Testsuite alleinstehend laufen.
 
 ===TOOL===
@@ -894,7 +930,7 @@ branch 'WEB-3935-sonar-issues-mechanical-cleanup' set up to track 'origin/WEB-39
 To bitbucket.org:transgourmet/webshop-frontend.git
  * [new branch]            HEAD -> WEB-3935-sonar-issues-mechanical-cleanup
 
-===AGENT===
+===PROGRESS===
 Auch der Sammel-Branch ist vollständig grün: 138 Tests, Typecheck und Lint. Er behebt unabhängig von S3696 insgesamt acht Findings aus S4043, S6660, S7737 und S7772. Ich erstelle jetzt den zweiten PR gegen `develop`.
 
 ===AGENT===
@@ -931,5 +967,8 @@ Formatiere gemäss: D:\sources\agentic-sbb-2026\EXPORT-SPEC.md
 ===AGENT===
 Ich lese zuerst die Export-Spezifikation vollständig und ermittle danach die aktuelle Task-ID sowie den vollständigen Gesprächsverlauf. Anschließend schreibe ich den Export exakt in das gewünschte Verzeichnis und validiere Format und Dateiname gegen die Spezifikation.
 
-===AGENT===
+===PROGRESS===
 Die Spezifikation ist eindeutig: eine einzelne UTF‑8-Markdown-Datei mit unveränderten User-Beiträgen und getrennten User-/Agent-/Tool-Blöcken. Ich baue den Export jetzt direkt aus dem lokalen Task-Protokoll; sensible Credential-Kommandos lasse ich aus den optionalen Tool-Blöcken heraus.
+
+===AGENT===
+Der Gesprächsverlauf wurde als `05-sonar-issues-cart-hardening.md` in das gewünschte Verzeichnis exportiert.
