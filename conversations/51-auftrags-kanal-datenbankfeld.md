@@ -1,7 +1,7 @@
 # Auftrags-Kanal im Datenmodell finden
 
 ===USER===
-Ein ProlixPro Auftrag ist einem Kanal zugeordnet (z.B. "Integrale"). Kannst du mir sagen welches Feld in der DB diesen Kanal speichert? Und welche Werte es in der DB für da Feld gibt?
+/ppdb Ein ProlixPro Auftrag ist einem Kanal zugeordnet (z.B. "Integrale"). Kannst du mir sagen welches Feld in der DB diesen Kanal speichert? Und welche Werte es in der DB für da Feld gibt?
 
 ===AGENT===
 Ich schaue nach, wie der "Kanal" (Channel) an einem ProlixPro-Auftrag gemappt ist. Dazu leite ich Tabellen- und Spaltennamen aus den Hibernate-Mappings des `ProdegaJpa`-Moduls ab, statt sie zu raten.
