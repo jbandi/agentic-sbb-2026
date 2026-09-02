@@ -3,7 +3,7 @@
 ===USER===
 /grill-with-docs
 
-Die Suche soll auch Verbindungen mit Umstieg finden, nicht nur Direktverbindungen. Luzern → Interlaken Ost sollte über Olten funktionieren. Grill mich, bevor du irgendwas baust.
+Die Suche soll auch Verbindungen mit Umstieg finden, nicht nur Direktverbindungen. Luzern → Interlaken Ost sollte über Olten funktionieren. 
 
 ===AGENT duration="4 s"===
 Bevor ich frage, schaue ich mir an, was tatsächlich da ist — ich will keine Frage stellen, deren Antwort im Repo steht.

@@ -1,4 +1,4 @@
-# 21-Workshop-Umbau: Grill, Spec und Tickets
+# Workshop-Umbau: Grill, Spec und Tickets
 
 ===USER===
 $grill-me Ich möchte den Code in dem Workshop-Repository umstrukturieren.
@@ -163,8 +163,11 @@ Mindestens denkbar sind:
 
 ===USER===
 Q1, Q2, Q3 -> dein e Empfehlung ¨übernehmen
+
 Q4: Die Applikation (Webshop, MCP, MCP-App) soll mit einem Konfigurationsflag entweder gegen das Mock-API gehen (default, v.a. für lokale Entwicklung im Workshop) oder gegen das echte Trasngourmet API. Das Deployment auf Fly soll dann die Konfiguration für das echte Trasngourmet API verwenden.
+
 Q5: öffentlich mit rate limit und limitierung der Kontext-Grösse -> Siehe dazu auch die Implementation im /Users/jonas/Dev/ai-webshop-demo/webshop-with-ai - nur der Webshop (ai-in-app) hat ja zugriff auf die LLM und muss abgesichert werden. Die MCP Endpunkte ermöglichen ja keinen Zugriff auf eine LLM. Ich werde die App auf Fly deaktivieren ausserhalb der Zeitfenster wo ich den Workshop durchführe.
+
 Q6: deine Empfehlung übernehmen
 
 ===AGENT===
@@ -178,6 +181,7 @@ Q1–Q6 sind erfasst: lineare Kette, eigenständige Projekte, integrierte Abschl
 
 ===USER===
 Q7: 00-webshop-base entfernen
+
 Q8: Gemäss deiner Empfehlung. Deployment soll mauell (fly deploy) von meinem Entwicklerrechner erfolgen
 
 ===AGENT===
@@ -309,14 +313,22 @@ Das bedeutet auch: Wenn die 2b-Lösung Bonusfunktionalität wie MRTR-Checkout un
 
 ===USER===
 Q9:-> gemäss empfehlung. und ja: das Mock API betrifft nur die Produktsuche und Artikeldetails. Warenkorb soll in der App selbst implementiert sein (nicht gegen externe API) und muss nicht dauerhaft persistent sein.
+
 Q10: -> gemäss empfehlung
+
 Q11: Der demo login im Webshop soll erweitert werden (Login per Dropdown aber mehrere Fix Konfigurierte Accounts mit einer sprechenden login-id). Beim MCP und MCP-APP muss für den Warenkorb eine dieser Login-IDs verwendet werden. Somit kann der Warenkorb geshared werden.
+
 Q12: -> gemäss empfehlung. Checkout ist rein intern in der App implementiert als Simulation. Kein externer API-Aufruf und schon gar nicht ein Aufruf auf einen externen produktiven Webshop.
+
 Q13: -> gemäss empfehlung
+
 Q14: ok ein schutz kann eingebaut werden, aber nur wenn er für den  "didaktischen Demo Pfad" isoliert werden kann und keine Komplexitat in den Code-Pfad bringt, welcher für das Demo und die Übungen relevant ist. Sonst lieber ohne. Wie gesagt, ich werde das Deployment auf Fly die meiste Zeit deaktiviert lassen.
+
 Q15: Die Empfehlung steht wohl im Widerspruch zu meiner Entscheidung in Q11 ... ich möchte mehrer hart codierte Login-IDs in der App haben. Konflikte können entstehen und werden für die Demo in Kauf genommen. Während der Übungen wird ja lokal gearbeitet, da wird es keine Konflikte geben
+
 Q16: gemäss empfehlung ... pro übung sogar abschätzen ob gewisser Boiler-Plate in den entsprechenden Starter aufgenommen werden soll (d.h. Starter ist sogar weiter als vorhergehende Übung) mit dem Ziel dass das Hands-On von allen Übungen aus kleinen, einfachen Schritten besteht ... grössere Blöcke von Code können z.B. schon vorbereite aber auskommentiert sein ... mit dem Ziel einen guten Didaktischen Flow mit wenig Stolperfallen und schnellen Erfolgserlebnissen in den Übungen zu haben
-Q17: Gemäss Empfehlung.  die Übungsanleitungen sollen jeweils die gängigen LLAM-Provider als Konfigurationsbeispiel aufführen. Im Workshop werden Teilnehmer sein, die unterschiedliche LLAM-Provider verwenden wollen.
+
+  Q17: Gemäss Empfehlung.  die Übungsanleitungen sollen jeweils die gängigen LLAM-Provider als Konfigurationsbeispiel aufführen. Im Workshop werden Teilnehmer sein, die unterschiedliche LLAM-Provider verwenden wollen.
 
 ===AGENT===
 Damit ist der gemeinsame Warenkorb jetzt klarer: Eine feste, sprechende `loginId` wird zum kanalübergreifenden Handle für Webshop, AI-Chat, MCP, MCP App und WebMCP; bewusst akzeptierte Kollisionen gehören zur Demo. Den öffentlichen Schutz behandle ich als Infrastrukturhülle, die nicht in den Übungscode hineinragt. Jetzt folgen die Entscheidungen zu Accountmodell, Tool-Verträgen, Starterzuschnitt und Repository-Endzustand.

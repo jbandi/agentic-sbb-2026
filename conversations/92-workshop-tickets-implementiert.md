@@ -1,4 +1,4 @@
-# Workshop-Tickets mit Subagents implementieren
+# Workshop-Umbau: Implementation mit Subagents
 
 ===USER===
 $implement Alle Tickets in diesem Projekt. Verwende Subagents und mache feingranulare Commits pro Ticket
@@ -6,7 +6,7 @@ $implement Alle Tickets in diesem Projekt. Verwende Subagents und mache feingran
 ===AGENT===
 Ich verwende die ausdrücklich genannte `implement`-Skill, dazu die vorgeschriebene TDD- und abschließende Code-Review-Methodik. Zuerst lese ich die Skill- und Repo-Anweisungen vollständig, inventarisiere dann alle offenen GitHub-Tickets und teile unabhängige Tickets auf Subagents auf; jedes Ticket erhält einen eigenen, feingranularen Commit.
 
-===PROGRESS===
+===PROGRESS duration="2 h"===
 Für TDD behandle ich die in den Tickets genannten öffentlichen Schnittstellen und Akzeptanzkriterien als vorab vereinbarte Test-Seams; falls ein Ticket keine solche Seam beschreibt, teste ich an der nächstliegenden bestehenden öffentlichen API und dokumentiere die Annahme im Commit. Jetzt prüfe ich Repository-Zustand, Domain-Dokumentation, Tooling und die vollständige offene Ticketliste.
 
 ===TOOL===
